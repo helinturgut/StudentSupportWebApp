@@ -23,23 +23,24 @@ public class CvFeedbackService {
     private final GeminiService geminiService;
     private final CvFileParsingService cvFileParsingService;
 
-    public CvFeedbackResponse submit(Long userId, String inputText) {
+    public CvFeedbackResponse submit(Long userId, String inputText, boolean detailed) {
         User user = getUser(userId);
 
-        GeminiService.AiResult result = geminiService.generateCvFeedback(inputText);
+        GeminiService.AiResult result = geminiService.generateCvFeedback(inputText, detailed);
 
         CvFeedback cvFeedback = CvFeedback.builder()
                 .user(user)
                 .inputText(inputText)
                 .feedbackText(result.text())
+                .detailed(detailed)
                 .build();
 
         return toResponse(cvFeedbackRepository.save(cvFeedback));
     }
 
-    public CvFeedbackResponse submitFromFile(Long userId, MultipartFile file) {
+    public CvFeedbackResponse submitFromFile(Long userId, MultipartFile file, boolean detailed) {
         String extractedText = cvFileParsingService.extractText(file);
-        return submit(userId, extractedText);
+        return submit(userId, extractedText, detailed);
     }
 
     public List<CvFeedbackResponse> listForUser(Long userId) {
@@ -56,6 +57,13 @@ public class CvFeedbackService {
                 .orElseThrow(() -> new ResourceNotFoundException("CV feedback record not found"));
     }
 
+    public void delete(Long userId, Long cvFeedbackId) {
+        User user = getUser(userId);
+        CvFeedback cvFeedback = cvFeedbackRepository.findByCvFeedbackIdAndUser(cvFeedbackId, user)
+                .orElseThrow(() -> new ResourceNotFoundException("CV feedback record not found"));
+        cvFeedbackRepository.delete(cvFeedback);
+    }
+
     private User getUser(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
@@ -66,6 +74,7 @@ public class CvFeedbackService {
                 .cvFeedbackId(cvFeedback.getCvFeedbackId())
                 .inputText(cvFeedback.getInputText())
                 .feedbackText(cvFeedback.getFeedbackText())
+                .detailed(cvFeedback.isDetailed())
                 .createdAt(cvFeedback.getCreatedAt())
                 .build();
     }

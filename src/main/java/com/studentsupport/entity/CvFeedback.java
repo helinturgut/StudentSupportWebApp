@@ -29,6 +29,10 @@ public class CvFeedback {
     @Column(columnDefinition = "TEXT")
     private String feedbackText;
 
+    @Column(columnDefinition = "boolean not null default false")
+    @Builder.Default
+    private boolean detailed = false;
+
     private LocalDateTime createdAt;
 
     @PrePersist

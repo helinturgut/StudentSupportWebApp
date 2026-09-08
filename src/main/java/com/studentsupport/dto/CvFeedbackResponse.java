@@ -12,5 +12,6 @@ public class CvFeedbackResponse {
     private Long cvFeedbackId;
     private String inputText;
     private String feedbackText;
+    private boolean detailed;
     private LocalDateTime createdAt;
 }

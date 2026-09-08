@@ -64,7 +64,6 @@ public class FileStorageService {
             }
             Files.deleteIfExists(target);
         } catch (IOException ignored) {
-            // Best-effort cleanup; a leftover file on disk isn't worth failing the request over.
         }
     }
 

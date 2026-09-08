@@ -10,4 +10,6 @@ public class CvFeedbackRequest {
 
     @NotBlank(message = "CV text is required")
     private String inputText;
+
+    private boolean detailed;
 }

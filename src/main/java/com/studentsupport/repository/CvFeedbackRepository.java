@@ -14,4 +14,6 @@ public interface CvFeedbackRepository extends JpaRepository<CvFeedback, Long> {
     Optional<CvFeedback> findByCvFeedbackIdAndUser(Long cvFeedbackId, User user);
 
     long countByUser(User user);
+
+    void deleteByUser(User user);
 }
