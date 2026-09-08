@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { submitFeedback, getOwnFeedback } from '../api/feedback';
+import { submitFeedback, getOwnFeedback, deleteFeedback } from '../api/feedback';
 import { extractErrorMessage } from '../api/client';
 import Alert from '../components/Alert';
 
@@ -20,6 +20,17 @@ export default function FeedbackPage() {
   };
 
   useEffect(load, []);
+
+  const handleDelete = async (feedbackId) => {
+    setError('');
+    setSuccess('');
+    try {
+      await deleteFeedback(feedbackId);
+      setOwnFeedback((prev) => prev.filter((f) => f.feedbackId !== feedbackId));
+    } catch (err) {
+      setError(extractErrorMessage(err));
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -71,6 +82,7 @@ export default function FeedbackPage() {
               <th>Rating</th>
               <th>Comment</th>
               <th>Submitted</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -79,6 +91,11 @@ export default function FeedbackPage() {
                 <td>{f.rating}</td>
                 <td>{f.comment}</td>
                 <td>{new Date(f.createdAt).toLocaleString('en-GB')}</td>
+                <td>
+                  <button type="button" className="btn btn-danger" onClick={() => handleDelete(f.feedbackId)}>
+                    Delete
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>

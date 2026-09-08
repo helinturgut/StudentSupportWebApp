@@ -6,6 +6,7 @@ import com.studentsupport.dto.UserFeedbackResponse;
 import com.studentsupport.entity.User;
 import com.studentsupport.entity.UserFeedback;
 import com.studentsupport.exception.ResourceNotFoundException;
+import com.studentsupport.exception.UnauthorizedException;
 import com.studentsupport.repository.UserFeedbackRepository;
 import com.studentsupport.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +42,17 @@ public class UserFeedbackService {
         return userFeedbackRepository.findByUserOrderByCreatedAtDesc(user).stream()
                 .map(this::toResponse)
                 .toList();
+    }
+
+    public void delete(Long userId, Long feedbackId) {
+        UserFeedback feedback = userFeedbackRepository.findById(feedbackId)
+                .orElseThrow(() -> new ResourceNotFoundException("Feedback not found"));
+
+        if (!feedback.getUser().getUserId().equals(userId)) {
+            throw new UnauthorizedException("You cannot delete feedback that isn't yours");
+        }
+
+        userFeedbackRepository.delete(feedback);
     }
 
     public AdminFeedbackSummaryResponse listAll() {

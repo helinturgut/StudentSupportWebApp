@@ -15,4 +15,6 @@ public interface UserFeedbackRepository extends JpaRepository<UserFeedback, Long
     Double findAverageRating();
 
     long count();
+
+    void deleteByUser(User user);
 }
