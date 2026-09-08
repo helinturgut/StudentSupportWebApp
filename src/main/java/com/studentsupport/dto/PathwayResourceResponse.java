@@ -9,6 +9,5 @@ public class PathwayResourceResponse {
 
     private Long resourceId;
     private String resourceTitle;
-    private String resourceUrl;
     private String linkReason;
 }

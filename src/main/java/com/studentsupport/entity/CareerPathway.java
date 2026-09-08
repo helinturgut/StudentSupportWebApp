@@ -24,6 +24,9 @@ public class CareerPathway {
     private User createdBy;
 
     @Column(nullable = false)
+    private String profession;
+
+    @Column(nullable = false)
     private String title;
 
     @Column(columnDefinition = "TEXT")

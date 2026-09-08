@@ -1,6 +1,7 @@
 package com.studentsupport.repository;
 
 import com.studentsupport.entity.Resource;
+import com.studentsupport.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,11 +20,13 @@ public interface ResourceRepository extends JpaRepository<Resource, Long> {
     Page<Resource> searchByKeyword(@Param("keyword") String keyword, Pageable pageable);
 
     @Query("SELECT r FROM Resource r WHERE " +
-           "(:keyword IS NULL OR LOWER(r.title) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(r.description) LIKE LOWER(CONCAT('%', :keyword, '%'))) AND " +
-           "(:category IS NULL OR LOWER(r.category) LIKE LOWER(CONCAT('%', :category, '%')))")
+           "(:keyword IS NULL OR LOWER(r.title) LIKE LOWER(CONCAT('%', CAST(:keyword AS string), '%')) OR LOWER(r.description) LIKE LOWER(CONCAT('%', CAST(:keyword AS string), '%'))) AND " +
+           "(:category IS NULL OR LOWER(r.category) LIKE LOWER(CONCAT('%', CAST(:category AS string), '%')))")
     Page<Resource> findByKeywordAndCategory(@Param("keyword") String keyword,
                                             @Param("category") String category,
                                             Pageable pageable);
 
     List<Resource> findByCategoryContainingIgnoreCase(String category);
+
+    boolean existsByCreatedBy(User createdBy);
 }

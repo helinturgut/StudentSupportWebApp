@@ -116,7 +116,6 @@ public class CareerPathwayService {
                 .map(pr -> PathwayResourceResponse.builder()
                         .resourceId(pr.getResource().getResourceId())
                         .resourceTitle(pr.getResource().getTitle())
-                        .resourceUrl(pr.getResource().getUrl())
                         .linkReason(pr.getLinkReason())
                         .build())
                 .toList();

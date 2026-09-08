@@ -58,9 +58,9 @@ export default function CareerPathwayDetailPage() {
           {pathway.resources.map((r) => (
             <div className="card" key={r.resourceId}>
               <h3>{r.resourceTitle}</h3>
-              {r.linkReason && <p>{r.linkReason}</p>}
-              {r.resourceUrl && (
-                <a href={r.resourceUrl} target="_blank" rel="noreferrer" className="btn btn-ghost btn-small">
+              {r.linkReason && !/^(https?:)?\/\//i.test(r.linkReason.trim()) && <p>{r.linkReason}</p>}
+              {r.resourceId && (
+                <a href={`/api/resources/${r.resourceId}/open`} target="_blank" rel="noreferrer" className="btn btn-ghost btn-small">
                   Open resource →
                 </a>
               )}

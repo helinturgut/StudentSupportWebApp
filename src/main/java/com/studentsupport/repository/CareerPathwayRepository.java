@@ -13,4 +13,9 @@ public interface CareerPathwayRepository extends JpaRepository<CareerPathway, Lo
            "LOWER(cp.title) LIKE LOWER(CONCAT('%', :term, '%')) OR " +
            "LOWER(cp.requiredSkills) LIKE LOWER(CONCAT('%', :term, '%'))")
     List<CareerPathway> findByTitleOrSkillsContaining(@Param("term") String term);
+
+    List<CareerPathway> findByProfessionIgnoreCaseOrderByTitleAsc(String profession);
+
+    @Query("SELECT DISTINCT cp.profession FROM CareerPathway cp ORDER BY cp.profession")
+    List<String> findDistinctProfessions();
 }
