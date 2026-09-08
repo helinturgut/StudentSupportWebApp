@@ -37,6 +37,10 @@ public class User {
     @Builder.Default
     private UserStatus status = UserStatus.ACTIVE;
 
+    @Column(nullable = false)
+    @Builder.Default
+    private boolean staffListHidden = false;
+
     private LocalDateTime createdAt;
 
     @PrePersist

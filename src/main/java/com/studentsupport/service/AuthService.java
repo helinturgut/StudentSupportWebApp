@@ -80,6 +80,14 @@ public class AuthService {
             throw new UnauthorizedException("Invalid email or password");
         }
 
+        if (user.getStatus() == UserStatus.PENDING_APPROVAL) {
+            throw new UnauthorizedException("Please set your password using the link we emailed you");
+        }
+
+        if (user.getStatus() == UserStatus.REJECTED) {
+            throw new UnauthorizedException("This account is not active");
+        }
+
         if (user.getStatus() != UserStatus.ACTIVE) {
             throw new UnauthorizedException("This account is not active");
         }
@@ -97,8 +105,6 @@ public class AuthService {
             throw new UnauthorizedException("Invalid or expired refresh token");
         }
 
-        // Rotate: revoke the used token and issue a new one, so a leaked/replayed
-        // refresh token can only be used once.
         refreshToken.setRevoked(true);
         refreshTokenRepository.save(refreshToken);
 
@@ -129,8 +135,7 @@ public class AuthService {
             String resetLink = frontendUrl + "/reset-password?token=" + rawToken;
             emailService.sendPasswordResetEmail(user.getEmail(), resetLink);
         });
-        // Always returns silently, whether or not the email exists, so the
-        // endpoint can't be used to enumerate registered accounts.
+
     }
 
     @Transactional
@@ -144,6 +149,9 @@ public class AuthService {
 
         User user = resetToken.getUser();
         user.setPasswordHash(passwordEncoder.encode(newPassword));
+        if (user.getStatus() == UserStatus.PENDING_APPROVAL) {
+            user.setStatus(UserStatus.ACTIVE);
+        }
         userRepository.save(user);
 
         resetToken.setUsed(true);

@@ -2,5 +2,7 @@ package com.studentsupport.entity;
 
 public enum UserStatus {
     ACTIVE,
-    INACTIVE
+    INACTIVE,
+    PENDING_APPROVAL,
+    REJECTED
 }

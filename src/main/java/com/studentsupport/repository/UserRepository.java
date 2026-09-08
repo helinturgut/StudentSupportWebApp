@@ -1,5 +1,6 @@
 package com.studentsupport.repository;
 
+import com.studentsupport.entity.RoleName;
 import com.studentsupport.entity.User;
 import com.studentsupport.entity.UserStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,4 +15,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByEmail(String email);
 
     List<User> findByStatus(UserStatus status);
+
+    List<User> findByRole_RoleNameAndStatus(RoleName roleName, UserStatus status);
 }

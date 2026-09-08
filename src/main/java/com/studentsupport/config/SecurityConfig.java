@@ -49,12 +49,14 @@ public class SecurityConfig {
                 .requestMatchers(
                     "/api/health",
                     "/api/auth/**",
+                    "/api/resources/*/open",
                     "/h2-console/**",
                     "/swagger-ui/**",
                     "/swagger-ui.html",
                     "/v3/api-docs/**"
                 ).permitAll()
-                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                .requestMatchers("/api/admin/staff-accounts/**").hasRole("ADMIN")
+                .requestMatchers("/api/admin/**").hasAnyRole("ADMIN", "CAREER_SUPPORT_STAFF")
                 .requestMatchers("/api/students/**").hasRole("STUDENT")
                 .anyRequest().authenticated()
             )

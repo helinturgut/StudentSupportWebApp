@@ -8,10 +8,6 @@ import java.time.Instant;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
-/**
- * Simple in-memory sliding-window rate limiter. Sufficient for a single-instance
- * deployment; would need a shared store (e.g. Redis) if scaled horizontally.
- */
 @Service
 public class RateLimiterService {
 
